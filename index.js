@@ -15,7 +15,7 @@ app.use("/api/user", userRoute);
 app.use("/api/admin", adminRoute);
 app.use('/api/doctor',doctorRoute);
 
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 
 
@@ -29,8 +29,8 @@ if (process.env.NODE_ENV === "production") {
 
 app.get("/", (req, res) => res.send("Hello World!"));
 
-app.listen(port, async()=>{
+app.listen(PORT, async()=>{
     await connect()
-    console.log(`Listening on port  ${port}`)
+    console.log(`Listening on port  ${PORT}`)
     
 })

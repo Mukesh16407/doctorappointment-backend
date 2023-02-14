@@ -29,8 +29,11 @@ app.get("/items/:my_item", async (req, res) => {
 })
 
 
-app.listen(PORT, async()=>{
-    await connect()
-    console.log(`Listening on port  ${PORT}`)
-    
-})
+client.connect(err => {
+  if(err){ console.error(err); return false;}
+  
+  app.listen(PORT, async() => {
+   await connect()
+      console.log(`listening for requests ${PORT}`);
+  })
+});

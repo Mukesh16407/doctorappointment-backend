@@ -1,8 +1,8 @@
-const { MongoClient } = require('mongodb');
 const express = require('express');
 const app = express();
 const connect = require('./config/dbconfig.js');
 require('dotenv').config();
+const path = require("path");
 
 app.use(express.json());
 
@@ -16,24 +16,21 @@ app.use("/api/admin", adminRoute);
 app.use('/api/doctor',doctorRoute);
 
 const PORT = process.env.PORT || 5000;
-const uri = process.env.MONGO_URL;
-const client = new MongoClient(uri);
 
-app.get("/items/:my_item", async (req, res) => {
-  let my_item = req.params.my_item;
-  let item = await client.db("my_db")
-              .collection("my_collection")
-              .findOne({my_item: my_item})
 
-  return res.json(item)
+
+if (process.env.NODE_ENV === "production") {
+  app.use("/", express.static("client/build"));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client/build/index.html"));
+  });
+}
+
+app.get("/", (req, res) => res.send("Hello World!"));
+
+app.listen(PORT, async()=>{
+    await connect()
+    console.log(`Listening on port  ${PORT}`)
+    
 })
-
-
-client.connect(err => {
-  if(err){ console.error(err); return false;}
-  
-  app.listen(PORT, async() => {
-   await connect()
-      console.log(`listening for requests ${PORT}`);
-  })
-});
